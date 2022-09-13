@@ -1,13 +1,24 @@
-import { NextPage } from "next";
+import { GetServerSideProps, NextPage } from "next";
 import styles from '../styles/Home.module.css'
 import Navbar from '../components/Navbar'
 import Head from 'next/head'
-import { useEffect, useState } from 'react';
+import Link from "next/link";
 
-const guideEndpoint = 'http://127.0.0.1:8000/guide/posts/';
+interface GuideProps{
+  data: {
+    id: number
+    title: string
+    body: string
+    tags: string
+    user: number
+  }[];
+}
 
-export async function getServerSideProps() {
-  const res = await fetch(guideEndpoint);
+const guideEndpoint = 'http://127.0.0.1:7000/guide/posts/';
+
+export const getServerSideProps: GetServerSideProps = async () =>  {
+  // multipart form
+  const res = await fetch(guideEndpoint, { method: 'GET' });
   const data = await res.json();
   return {
     props: {
@@ -16,44 +27,8 @@ export async function getServerSideProps() {
   }
 }
 
-const Guide: NextPage = ({ data }) => {
+export default function Guide({ data }: GuideProps){
   console.log(data)
-  const { info, results: defaultResults = [] } = data;
-  const [results, updateResults] = useState(defaultResults);
-  const [page, updatePage] = useState({
-    ...info,
-    current: guideEndpoint
-  });
-  const { current } = page;
-
-  useEffect(() => {
-    if (current === guideEndpoint) return;
-
-    async function request() {
-      const res = await fetch(current)
-      const nextData = await res.json()
-
-      updatePage({
-        current,
-        ...nextData.info
-      });
-
-      if (!nextData.info?.prev) {
-        updateResults(nextData.results);
-        return;
-      }
-
-      updateResults((prev: any) => {
-        return [
-          ...prev,
-          ...nextData.results
-        ]
-      })
-    }
-    request();
-  }, [current]);
-
-
   return (
     <div className={styles.container}>
       <Head>
@@ -74,33 +49,19 @@ const Guide: NextPage = ({ data }) => {
         </p>
 
         <ul className={styles.grid}>
-          {results.map((result: { id: any; title: any; }) => {
-            const { id, title } = result;
+          {data.map(({ id, title }) => {
             return (
               <li key={id} className={styles.card}>
-                <a>
-                  <h2>{title}</h2>
-                </a>
-                {/* <Link href='/character/[id]' as={`/character/${id}`}>
-                                    <a>
-                                        <h2>{title}</h2>
-                                    </a>
-                                </Link> */}
+                <Link href='/character/[id]' as={`/character/${id}`}>
+                  <a>
+                    <h2>{title}</h2>
+                  </a>
+                </Link>
               </li>
             )
           })}
         </ul>
-        <div className={styles.grid}>
-          {results.map((result: { id: number; title: string; tags:string; }) => {
-            const { id, title, tags } = result;
-            return (
-              <a href="" key={id} className={styles.card}>
-                <h2>{title}</h2>
-                <p>{tags}</p>
-              </a>
-            )
-          })}
-        </div>
+
       </main>
 
       <footer className={styles.footer}>
@@ -116,4 +77,3 @@ const Guide: NextPage = ({ data }) => {
   )
 }
 
-export default Guide;
