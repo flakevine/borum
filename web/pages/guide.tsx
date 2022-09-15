@@ -14,7 +14,7 @@ interface GuideProps{
   }[];
 }
 
-const guideEndpoint = 'http://127.0.0.1:7000/guide/posts/';
+const guideEndpoint = 'http://127.0.0.1:8000/guide/posts/';
 
 export const getServerSideProps: GetServerSideProps = async () =>  {
   // multipart form
