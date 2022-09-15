@@ -1,7 +1,9 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
+from rest_framework.routers import DefaultRouter
 
-urlpatterns = [
-    path('posts/', views.guides),
-    path('posts/<int:id>', views.guide),
-]
+router = DefaultRouter()
+
+router.register('posts', views.Guides, basename='guias')
+
+urlpatterns = router.urls
