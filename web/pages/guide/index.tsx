@@ -1,6 +1,6 @@
 import { GetServerSideProps, NextPage } from "next";
-import styles from '../styles/Home.module.css'
-import Navbar from '../components/Navbar'
+import styles from '../../styles/Home.module.css'
+import Navbar from '../../components/Navbar'
 import Head from 'next/head'
 import Link from "next/link";
 
@@ -10,7 +10,7 @@ interface GuideProps{
     title: string
     body: string
     tags: string
-    user: number
+    user_id: number
   }[];
 }
 
@@ -52,7 +52,7 @@ export default function Guide({ data }: GuideProps){
           {data.map(({ id, title }) => {
             return (
               <li key={id} className={styles.card}>
-                <Link href='/character/[id]' as={`/character/${id}`}>
+                <Link href='guide/[id]' as={`/guide/${id}`}>
                   <a>
                     <h2>{title}</h2>
                   </a>
