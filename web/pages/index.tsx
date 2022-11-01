@@ -2,8 +2,33 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import Navbar from '../components/Navbar'
+import { useEffect, useState } from 'react'
 
 const Home: NextPage = () => {
+
+  const [message, setMessage] = useState('');
+  const [auth, setAuth] = useState(false);
+
+  useEffect(() => {
+      (
+          async () => {
+              try {
+                  const response = await fetch('http://localhost:8000/users/user', {
+                      credentials: 'include',
+                  });
+
+                  const content = await response.json();
+
+                  setMessage(`Hi ${content.name}`);
+                  setAuth(true);
+              } catch (e) {
+                  setMessage('You are not logged in');
+                  setAuth(false);
+              }
+          }
+      )();
+  });
+
   return (
     <div className={styles.container}>
       <Head>
@@ -16,7 +41,7 @@ const Home: NextPage = () => {
 
       <main className={styles.main}>
         <h1 className={styles.title}>
-          Home
+          {message}
         </h1>
       </main>
     </div>

@@ -1,19 +1,33 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import Navbar from '../components/Navbar'
-import { FieldValues, SubmitHandler, useForm } from 'react-hook-form'
+import type { NextPage } from "next";
+import Head from "next/head";
+import { SyntheticEvent, useState } from "react";
+import Navbar from "../components/Navbar";
+import {useRouter} from "next/router";
 
 type LoginFields = {
-  name: string,
-  password: string,
-}
+  email: string;
+  password: string;
+};
 
 const Login: NextPage = () => {
-  const {register, handleSubmit } = useForm<LoginFields>();
+  const router = useRouter()
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const onSubmit = handleSubmit((data) => {
-    console.log(data)
-  })
+  const submit = async (e:SyntheticEvent) =>{
+    e.preventDefault();
+
+    await fetch('http://localhost:8000/users/login', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      credentials: 'include',
+      body: JSON.stringify({
+        email,
+        password
+      }) 
+    }) 
+    await router.push('/')
+  }
 
   return (
     <div>
@@ -27,14 +41,14 @@ const Login: NextPage = () => {
 
       <main>
         <h1>Login</h1>
-        <form className='flex flex-col gap-2' onSubmit={onSubmit}>
-          <input type="text"      {...register('name')}placeholder='name' />
-          <input type="password"  {...register('password')}placeholder='password' />
-          <input type="submit" className='bg-blue-500 text-white p-5' value='Login'/>
+        <form className="flex flex-col gap-2" onSubmit={submit}>
+          <input type="text" placeholder="name" required onChange={e => setEmail(e.target.value)} />
+          <input type="password" placeholder="password" required onChange={e => setPassword(e.target.value)} />
+          <button className="bg-blue-500 text-white p-5" type="submit">Submit</button>
         </form>
       </main>
     </div>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;
