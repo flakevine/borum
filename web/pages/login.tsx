@@ -42,7 +42,7 @@ const Login: NextPage = () => {
       <main>
         <h1>Login</h1>
         <form className="flex flex-col gap-2" onSubmit={submit}>
-          <input type="text" placeholder="name" required onChange={e => setEmail(e.target.value)} />
+          <input type="text" placeholder="email" required onChange={e => setEmail(e.target.value)} />
           <input type="password" placeholder="password" required onChange={e => setPassword(e.target.value)} />
           <button className="bg-blue-500 text-white p-5" type="submit">Submit</button>
         </form>

@@ -19,7 +19,7 @@ const Home: NextPage = () => {
 
                   const content = await response.json();
 
-                  setMessage(`Hi ${content.name}`);
+                  setMessage(`Hi ${content.name}, you're logged!`);
                   setAuth(true);
               } catch (e) {
                   setMessage('You are not logged in');
@@ -37,7 +37,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       
-      <Navbar/>
+      <Navbar auth={auth} />
 
       <main className={styles.main}>
         <h1 className={styles.title}>
