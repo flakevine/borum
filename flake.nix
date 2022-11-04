@@ -12,7 +12,6 @@
         django
         djangorestframework
         django-cors-headers
-        pyjwt
       ]);
     in {
       devShell = pkgs.mkShell {
